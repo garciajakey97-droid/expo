@@ -1,26 +1,32 @@
-import { Button, Switch, ContextMenu, Submenu, Host } from '@expo/ui/jetpack-compose';
-// import { useVideoPlayer, VideoView } from 'expo-video';
+import {
+  Button,
+  ContextMenu,
+  Divider,
+  DropdownMenuItem,
+  Host,
+  Icon,
+} from '@expo/ui/jetpack-compose';
 import * as React from 'react';
-import { View, /* StyleSheet, */ Text } from 'react-native';
+import { View, Text } from 'react-native';
 
 import { Section } from '../../components/Page';
 
-// const videoLink =
-//   'https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/360/Big_Buck_Bunny_360_10s_2MB.mp4';
+const homeIcon = require('../../../assets/icons/api/Location.png');
+const profileIcon = require('../../../assets/icons/api/Contacts.png');
+const notificationIcon = require('../../../assets/icons/api/Notification.png');
+const darkModeIcon = require('../../../assets/icons/api/ScreenOrientation.png');
+const logoutIcon = require('../../../assets/icons/api/SecureStore.png');
+const starIcon = require('../../../assets/icons/api/StoreReview.png');
+const favoriteIcon = require('../../../assets/icons/api/Haptic.png');
+const checkIcon = require('../../../assets/icons/api/KeepAwake.png');
+const settingsIcon = require('../../../assets/icons/api/Sensor.png');
+const faceIcon = require('../../../assets/icons/api/Camera.png');
 
 export default function ContextMenuScreen() {
-  // const [selectedIndex, setSelectedIndex] = React.useState<number | null>(1);
   const [switchChecked, setSwitchChecked] = React.useState<boolean>(true);
-  const [switch2Checked, setSwitch2Checked] = React.useState<boolean>(true);
   const [selectedTheme, setSelectedTheme] = React.useState<'Light' | 'Dark' | 'Auto'>('Auto');
 
-  const themeForegroundColor = selectedTheme === 'Dark' ? 'white' : 'black';
   const themeBackgroundColor = selectedTheme === 'Dark' ? 'black' : 'white';
-  // const player = useVideoPlayer(videoLink, (player) => {
-  //   player.loop = true;
-  //   player.muted = true;
-  //   player.play();
-  // });
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -38,36 +44,36 @@ export default function ContextMenuScreen() {
                 </Button>
               </ContextMenu.Trigger>
               <ContextMenu.Items>
-                <Button
-                  elementColors={{
-                    containerColor: 'transparent',
-                    contentColor: themeForegroundColor,
-                  }}
-                  onPress={() => setSelectedTheme('Light')}
-                  leadingIcon="filled.Star"
-                  trailingIcon={selectedTheme === 'Light' ? 'filled.Check' : undefined}>
-                  Light
-                </Button>
-                <Button
-                  elementColors={{
-                    containerColor: 'transparent',
-                    contentColor: themeForegroundColor,
-                  }}
-                  onPress={() => setSelectedTheme('Dark')}
-                  leadingIcon="filled.Face"
-                  trailingIcon={selectedTheme === 'Dark' ? 'filled.Check' : undefined}>
-                  Dark
-                </Button>
-                <Button
-                  elementColors={{
-                    containerColor: 'transparent',
-                    contentColor: themeForegroundColor,
-                  }}
-                  onPress={() => setSelectedTheme('Auto')}
-                  leadingIcon="filled.Settings"
-                  trailingIcon={selectedTheme === 'Auto' ? 'filled.Check' : undefined}>
-                  Auto
-                </Button>
+                <DropdownMenuItem text="Light" onPress={() => setSelectedTheme('Light')}>
+                  <DropdownMenuItem.LeadingIcon>
+                    <Icon source={starIcon} size={24} />
+                  </DropdownMenuItem.LeadingIcon>
+                  {selectedTheme === 'Light' && (
+                    <DropdownMenuItem.TrailingIcon>
+                      <Icon source={checkIcon} size={24} />
+                    </DropdownMenuItem.TrailingIcon>
+                  )}
+                </DropdownMenuItem>
+                <DropdownMenuItem text="Dark" onPress={() => setSelectedTheme('Dark')}>
+                  <DropdownMenuItem.LeadingIcon>
+                    <Icon source={faceIcon} size={24} />
+                  </DropdownMenuItem.LeadingIcon>
+                  {selectedTheme === 'Dark' && (
+                    <DropdownMenuItem.TrailingIcon>
+                      <Icon source={checkIcon} size={24} />
+                    </DropdownMenuItem.TrailingIcon>
+                  )}
+                </DropdownMenuItem>
+                <DropdownMenuItem text="Auto" onPress={() => setSelectedTheme('Auto')}>
+                  <DropdownMenuItem.LeadingIcon>
+                    <Icon source={settingsIcon} size={24} />
+                  </DropdownMenuItem.LeadingIcon>
+                  {selectedTheme === 'Auto' && (
+                    <DropdownMenuItem.TrailingIcon>
+                      <Icon source={checkIcon} size={24} />
+                    </DropdownMenuItem.TrailingIcon>
+                  )}
+                </DropdownMenuItem>
               </ContextMenu.Items>
             </ContextMenu>
           </Host>
@@ -80,79 +86,83 @@ export default function ContextMenuScreen() {
               <Button variant="bordered">Show Colorful Menu</Button>
             </ContextMenu.Trigger>
             <ContextMenu.Items>
-              <Button variant="bordered" color="#ff0000" leadingIcon="filled.Favorite">
-                I'm red!
-              </Button>
-              <Button
-                variant="bordered"
-                elementColors={{ containerColor: '#0000ff', contentColor: '#00ff00' }}
-                leadingIcon="filled.Star"
-                trailingIcon="filled.Check">
-                My text is green!
-              </Button>
-              <Switch
-                value={switchChecked}
-                label="I'm very colorful!"
-                variant="checkbox"
-                elementColors={{
-                  checkedColor: '#ff0000',
-                  disabledCheckedColor: '#00ff00',
-                  uncheckedColor: '#0000ff',
-                  checkmarkColor: '#ffff00',
-                }}
-                onValueChange={setSwitchChecked}
-              />
-              <Switch
-                value={switch2Checked}
-                variant="switch"
-                label="Switches can be colorul too!"
-                onValueChange={setSwitch2Checked}
-                elementColors={{
-                  checkedThumbColor: '#ff0000',
-                  checkedTrackColor: '#00ff00',
-                  uncheckedThumbColor: '#0000ff',
-                  uncheckedTrackColor: '#ffff00',
-                }}
-              />
+              <DropdownMenuItem text="Favorite">
+                <DropdownMenuItem.LeadingIcon>
+                  <Icon source={favoriteIcon} size={24} />
+                </DropdownMenuItem.LeadingIcon>
+              </DropdownMenuItem>
+              <DropdownMenuItem text="Star">
+                <DropdownMenuItem.LeadingIcon>
+                  <Icon source={starIcon} size={24} />
+                </DropdownMenuItem.LeadingIcon>
+                <DropdownMenuItem.TrailingIcon>
+                  <Icon source={checkIcon} size={24} />
+                </DropdownMenuItem.TrailingIcon>
+              </DropdownMenuItem>
             </ContextMenu.Items>
           </ContextMenu>
         </Host>
       </Section>
-      <Section title="Context Menu with Submenu">
-        <ContextMenu>
-          <ContextMenu.Trigger>
-            <Button variant="outlined">Show Menu with Submenu</Button>
-          </ContextMenu.Trigger>
-          <ContextMenu.Items>
-            <Button leadingIcon="filled.Home" onPress={() => console.log('Home pressed')}>
-              Home
-            </Button>
-            <Submenu
-              button={
-                <Button leadingIcon="filled.Settings" trailingIcon="filled.ArrowForward">
-                  Settings
-                </Button>
-              }>
-              <Button leadingIcon="filled.Person" onPress={() => console.log('Profile pressed')}>
-                Profile Settings
-              </Button>
-              <Button
-                leadingIcon="filled.Notifications"
+      <Section title="Context Menu with Sections">
+        <Host matchContents>
+          <ContextMenu>
+            <ContextMenu.Trigger>
+              <Button variant="outlined">Show Menu with Sections</Button>
+            </ContextMenu.Trigger>
+            <ContextMenu.Items>
+              <DropdownMenuItem text="Home" onPress={() => console.log('Home pressed')}>
+                <DropdownMenuItem.LeadingIcon>
+                  <Icon source={homeIcon} size={24} />
+                </DropdownMenuItem.LeadingIcon>
+              </DropdownMenuItem>
+              <Divider />
+              <DropdownMenuItem
+                text="Profile Settings"
+                onPress={() => console.log('Profile pressed')}>
+                <DropdownMenuItem.LeadingIcon>
+                  <Icon source={profileIcon} size={24} />
+                </DropdownMenuItem.LeadingIcon>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                text="Notifications"
                 onPress={() => console.log('Notifications pressed')}>
-                Notifications
-              </Button>
-              <Switch
-                value={switchChecked}
-                label="Enable Dark Mode"
-                variant="switch"
-                onValueChange={setSwitchChecked}
-              />
-            </Submenu>
-            <Button leadingIcon="filled.ExitToApp" onPress={() => console.log('Logout pressed')}>
-              Logout
-            </Button>
-          </ContextMenu.Items>
-        </ContextMenu>
+                <DropdownMenuItem.LeadingIcon>
+                  <Icon source={notificationIcon} size={24} />
+                </DropdownMenuItem.LeadingIcon>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                text={switchChecked ? 'Dark Mode: ON' : 'Dark Mode: OFF'}
+                onPress={() => setSwitchChecked(!switchChecked)}>
+                <DropdownMenuItem.LeadingIcon>
+                  <Icon source={darkModeIcon} size={24} />
+                </DropdownMenuItem.LeadingIcon>
+              </DropdownMenuItem>
+              <Divider />
+              <DropdownMenuItem text="Logout" onPress={() => console.log('Logout pressed')}>
+                <DropdownMenuItem.LeadingIcon>
+                  <Icon source={logoutIcon} size={24} />
+                </DropdownMenuItem.LeadingIcon>
+              </DropdownMenuItem>
+              <Divider />
+              <ContextMenu>
+                <ContextMenu.Trigger>
+                  <DropdownMenuItem text="Submenu">
+                    <DropdownMenuItem.LeadingIcon>
+                      <Icon source={logoutIcon} size={24} />
+                    </DropdownMenuItem.LeadingIcon>
+                  </DropdownMenuItem>
+                </ContextMenu.Trigger>
+                <ContextMenu.Items>
+                  <DropdownMenuItem text="Logout" onPress={() => console.log('Logout pressed')}>
+                    <DropdownMenuItem.LeadingIcon>
+                      <Icon source={logoutIcon} size={24} />
+                    </DropdownMenuItem.LeadingIcon>
+                  </DropdownMenuItem>
+                </ContextMenu.Items>
+              </ContextMenu>
+            </ContextMenu.Items>
+          </ContextMenu>
+        </Host>
       </Section>
     </View>
   );
@@ -161,20 +171,3 @@ export default function ContextMenuScreen() {
 ContextMenuScreen.navigationOptions = {
   title: 'Context Menu',
 };
-
-// const styles = StyleSheet.create({
-//   menuIcon: {
-//     width: 32,
-//     height: 32,
-//   },
-//   longPressMenu: {
-//     width: 200,
-//     height: 200,
-//   },
-//   preview: {
-//     width: 300,
-//     height: 200,
-//     padding: 20,
-//     backgroundColor: '#ffeeee',
-//   },
-// });
