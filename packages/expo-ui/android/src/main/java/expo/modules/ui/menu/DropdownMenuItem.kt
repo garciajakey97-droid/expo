@@ -24,8 +24,6 @@ fun FunctionalComposableScope.DropdownMenuItemContent(
   props: DropdownMenuItemProps,
   onItemPressed: (ItemPressedEvent) -> Unit
 ) {
-  val contextMenuExpanded = LocalContextMenuExpanded.current
-
   val leadingSlotView = findChildSlotView(view, "leadingIcon")
   val trailingSlotView = findChildSlotView(view, "trailingIcon")
 
@@ -40,8 +38,6 @@ fun FunctionalComposableScope.DropdownMenuItemContent(
     },
     onClick = {
       onItemPressed(ItemPressedEvent())
-      // TODO: handle nested (true) and root (false)
-      contextMenuExpanded?.let { it.value = true }
     }
   )
 }
