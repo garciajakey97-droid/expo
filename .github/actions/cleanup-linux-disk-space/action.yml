@@ -1,53 +1,73 @@
-name: 'Cleanup GitHub Linux Runner Disk Space'
-description: 'Cleanup unused preinstalled packages on the GitHub Ubuntu runners'
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, Alert } from 'react-native';
 
-runs:
-  using: 'composite'
-  steps:
-    - name: '🧹 Cleanup preinstalled packages'
-      shell: bash
-      run: |
-        echo 'Disk space before cleanup'
-        df -aH
+// Mock data for the services you offer
+const SERVICES = [
+  { id: '1', title: 'Formal Event Companion', price: '$50/hr' },
+  { id: '2', title: 'Study Buddy', price: '$30/hr' },
+  { id: '3', title: 'Tour Guide', price: '$40/hr' },
+];
 
-        # There are two runners with different disk sizes used in CI. If the job is running on a large disk runner, skip the cleanup.
-        TOTAL_DISK_GB=$(df -BG / | tail -1 | awk '{print $2}' | sed 's/G//')
-        echo "Detected Disk Size: ${TOTAL_DISK_GB} GB"
-        if [ "$TOTAL_DISK_GB" -ge 100 ]; then
-          echo "Large disk size detected, skipping cleanup."
-          exit 0
-        fi
+export default function App() {
+  const [selectedService, setSelectedService] = useState(null);
 
-        # Regular package cleanup
-        sudo apt-get remove -y --purge '^mysql-.*' '^mongodb-.*' '^mssql-.*' '^postgresql-.*' '^aspnetcore-*' '^dotnet-.*' '^php.*-.*' 'mono-complete' '^llvm-.*' 'powershell' 'google-chrome-*' 'microsoft-edge-*' 'firefox' 'nginx' 'apache2' 'ghc' '^ghc-*'
-        sudo apt-get autoremove -y
+  const handleBooking = (title) => {
+    Alert.alert("Booking Request", `You have requested: ${title}. We will contact you soon!`);
+  };
 
-        # Remove unnecessary large directories
-        sudo rm -rf /usr/share/dotnet
-        sudo rm -rf /usr/local/.ghcup /opt/ghc
+  const renderItem = ({ item }) => (
+    <TouchableOpacity 
+      style={styles.card} 
+      onPress={() => handleBooking(item.title)}
+    >
+      <Text style={styles.serviceTitle}>{item.title}</Text>
+      <Text style={styles.price}>{item.price}</Text>
+    </TouchableOpacity>
+  );
 
-        # Android SDK cleanup
-        echo 'Showing installed Android SDKs'
-        ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager --list_installed
+  return (
+    <View style={styles.container}>
+      <Text style={styles.header}>Select a Service</Text>
+      <FlatList
+        data={SERVICES}
+        renderItem={renderItem}
+        keyExtractor={item => item.id}
+      />
+    </View>
+  );
+}
 
-        echo 'Cleaning unnecessary Android SDK components...'
-        echo 'Removing old build tools...'
-        ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager --uninstall "build-tools;31.0.0" "build-tools;32.0.0" "build-tools;33.0.0" "build-tools;33.0.1" "build-tools;33.0.2" "build-tools;33.0.3" "build-tools;34.0.0"
-
-        echo 'Removing old platforms...'
-        ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager --uninstall "platforms;android-31" "platforms;android-32" "platforms;android-33" "platforms;android-33-ext4" "platforms;android-33-ext5" "platforms;android-34" "platforms;android-34-ext8" "platforms;android-34-ext10" "platforms;android-34-ext11" "platforms;android-34-ext12"
-
-        echo 'Removing NDKs...'
-        ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager --uninstall "ndk;26.3.11579264" 
-
-        echo 'Removing extras...'
-        ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager --uninstall "extras;android;m2repository" "extras;google;google_play_services" "extras;google;m2repository"
-
-        # Docker cleanup
-        echo 'Cleaning up Docker resources'
-        docker system prune -af || true
-        echo 'Removing all Docker images'
-        docker rmi -f $(docker images -aq) || true
-
-        echo 'Disk space after cleanup'
-        df -aH
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+    paddingTop: 50,
+    paddingHorizontal: 20,
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
+    color: '#333',
+  },
+  card: {
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+    marginBottom: 15,
+    elevation: 3, // Shadow for Android
+    shadowColor: '#000', // Shadow for iOS
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+  },
+  serviceTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  price: {
+    color: '#2ecc71',
+    marginTop: 5,
+    fontWeight: 'bold',
+  },
+});
